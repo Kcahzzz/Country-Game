@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #globo {
+      width: 200px;
+      height: 200px;
+      background: url('https://static.vecteezy.com/system/resources/previews/013/114/269/original/3d-illustration-terrestrial-globe-white-background-png.png') no-repeat center;
+      background-size: cover;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate 10s infinite linear;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="globo"></div>
+  <input type="text" id="countryInput" placeholder="Digite um país">
+  <button onclick="guessCountry()">Adivinhar</button>
+  <p id="result"></p>
+
+  <script>
+    var countries = ['Argentina', 'Brasil', 'Canadá', 'Dinamarca', 'Egito', 'França', 'Grécia', 'Honduras', 'Itália', 'Japão', 'Quênia', 'México', 'Noruega', 'Peru', 'Rússia', 'Espanha', 'Turquia', 'Ucrânia', 'Venezuela', 'Zimbábue'];
+    var previousLetter = '';
+    
+    function guessCountry() {
+      var letter = generateRandomLetter();
+      var countryInput = document.getElementById('countryInput');
+      var country = countryInput.value.trim();
+      var result = document.getElementById('result');
+
+      if (country !== '' && isCountryValid(country) && isFirstLetterValid(letter, country)) {
+        result.textContent = 'Parabéns! Você acertou o país começando com a letra ' + letter.toUpperCase() + '.';
+        removeCountry(letter, country);
+        countryInput.value = '';
+      } else {
+        result.textContent = 'Tente novamente. Digite um país válido que comece com a letra ' + letter.toUpperCase() + '.';
+      }
+    }
+    
+    function generateRandomLetter() {
+      var letters = 'abcdefghijklmnopqrstuvwxyz';
+      var randomIndex = Math.floor(Math.random() * letters.length);
+      var letter = letters.charAt(randomIndex);
+      
+      if (letter === previousLetter) {
+        return generateRandomLetter();
+      }
+      
+      previousLetter = letter;
+      return letter;
+    }
+    
+    function isCountryValid(country) {
+      return countries.includes(country);
+    }
+    
+    function isFirstLetterValid(letter, country) {
+      return country.charAt(0).toLowerCase() === letter;
+    }
+    
+    function removeCountry(letter, country) {
+      var index = countries.indexOf(country);
+      if (index > -1) {
+        countries.splice(index, 1);
+      }
+      if (countries.length === 0) {
+        countries = ['Argentina', 'Brasil', 'Canadá', 'Dinamarca', 'Egito', 'França', 'Grécia', 'Honduras', 'Itália', 'Japão', 'Quênia', 'México', 'Noruega', 'Peru', 'Rússia', 'Espanha', 'Turquia', 'Ucrânia', 'Venezuela', 'Zimbábue'];
+      }
+    }
+  </script>
+</body>
+</html>
